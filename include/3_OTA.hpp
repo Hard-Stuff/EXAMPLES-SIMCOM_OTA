@@ -6,9 +6,9 @@
 // Inits (as needed)
 #include <inits/Version.hpp>
 
-// Other bricks (not recommended to include other bricks, but I'm being lazy)
-#include <bricks/SIMCOM.hpp>
-#include <bricks/HTTP.hpp>
+// Other bricks
+#include <1_SIMCOM.hpp>
+#include <2_HTTP.hpp>
 
 // Libs
 #include <ArduinoHttpClient.h>
@@ -18,9 +18,18 @@ namespace OTA
 {
     String _availableVersion;
 
-    void confirmConnected() {
-        if (HTTP::http.connected()) {
-            
+    bool init()
+    {
+
+        SIMCOM::client.setCACert(AWS_CERT_CA);
+        return SIMCOM::init();
+    }
+
+    void confirmConnected()
+    {
+        if (HTTP::http.connected())
+        {
+            // Do custom stuff
         }
     }
 
@@ -38,10 +47,10 @@ namespace OTA
             Serial.print(Version::version());
             Serial.print(", latest version: ");
             Serial.println(newVersion);
-            // if (newVersion.compareTo(Version::version()) != 0)
-            // {
-            //     _availableVersion = newVersion;
-            // }
+            if (newVersion.compareTo(Version::version()) != 0)
+            {
+                _availableVersion = newVersion;
+            }
             Serial.println("Force updating!");
             return true;
         }
@@ -69,7 +78,7 @@ namespace OTA
         request.addHeader("Cache-Control", "no-cache");
         request.addHeader("Connection", "close");
         HTTP::HttpResponse response = HTTP::getFromHTTPServer(file_path, &request, true);
-        
+
         for (int i_header = 0; i_header < response.header_count; i_header++)
         {
             if (response.headers[i_header].key.compareTo("Content-Length") == 0)
@@ -89,7 +98,7 @@ namespace OTA
             Serial.println("Begin OTA update. This may take a while...");
             if (Update.begin(contentLength))
             {
-                Update.writeStream(HTTP::http);
+                Update.writeStream(HTTP::http); // This is us streaming the body (which we skipped with "true" above)
                 if (Update.end())
                 {
                     Serial.println("OTA done!");

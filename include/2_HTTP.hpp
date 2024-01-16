@@ -5,7 +5,7 @@
 #include <configs/certs/certificate.h>
 
 // bricks
-#include <bricks/SIMCOM.hpp>
+#include <1_SIMCOM.hpp>
 
 // libs
 #include <ArduinoHttpClient.h>
@@ -159,9 +159,6 @@ namespace HTTP
     {
         bool _s = true;
         SIMCOM::client.setTimeout(5000);
-        // _s = _s && SIMCOM::client.setCertificate(AWS_CERT_CA);
-        // http.connectionKeepAlive(); // Currently, this is needed for HTTPS
-        // client.setHandshakeTimeout(5000);
         return _s;
     }
 
@@ -184,7 +181,6 @@ namespace HTTP
         }
         http.sendHeader("Content-Length", request->content.length());
         http.beginBody();
-        // http.println(request->content);
         http.println(request->content);
         http.endRequest();
 

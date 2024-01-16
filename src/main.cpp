@@ -1,8 +1,6 @@
 #include <configs/certs/certificate.h>
 
-#include "WiFi.h"
-#include <bricks/OTA.hpp>
-#include <bricks/SIMCOM.hpp>
+#include <3_OTA.hpp>
 
 void setup()
 {
@@ -11,8 +9,7 @@ void setup()
     delay(100);
     Serial.println("Started...");
 
-    SIMCOM::client.setCACert(AWS_CERT_CA);
-    SIMCOM::init();
+    OTA::init();
 
     if (!OTA::isUpdateAvailable("/version"))
     {

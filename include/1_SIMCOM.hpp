@@ -8,7 +8,6 @@
 #define TINY_GSM_RX_BUFFER 1024
 // #define TINY_GSM_DEBUG Serial
 
-// #include <SSLClientESP32.h>
 #include <TinyGsm.h>
 #include <TimeLib.h>
 
